@@ -1,4 +1,5 @@
 FROM debian:buster
+LABEL maintainer="abarot@42.student.fr"
 
 # COPY srcs/wordpress.tgz /root/.
 # COPY srcs/wp-database.sql /root/.
