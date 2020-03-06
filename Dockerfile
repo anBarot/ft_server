@@ -8,5 +8,5 @@ RUN apt-get install -y nginx
 RUN apt-get install -y wordpress
 RUN apt-get install -y mariadb-server
 RUN apt-get install -y openssl
-COPY ./srcs .
+COPY srcs/ .
 CMD bash ft_server.sh && tail -f /dev/null
