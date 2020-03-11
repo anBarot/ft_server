@@ -1,32 +1,42 @@
 #creation of my_site directories
 mkdir /var/www/my_site.com
 chown -R www-data: /var/www/my_site.com
-mv my_site_index.html /var/www/my_site.com/.
-ln -s /usr/share/phpmyadmin /var/www/my_site.com/.
 
 #configuration of nginx
 mv nginx.conf /etc/nginx/.
 mv my_site.com.conf /etc/nginx/sites-available/.
-rm /etc/nginx/sites-available/default
 rm /etc/nginx/sites-enabled/default
 ln -s /etc/nginx/sites-available/my_site.com.conf /etc/nginx/sites-enabled/.
 
-#ssl key and certificate migration
-mv my_site.key /etc/ssl/private/.
-mv my_site.crt /etc/ssl/certs/.
+#ssl key and certificate creation
+openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out /etc/ssl/certs/my_site.pem -keyout /etc/ssl/private/my_site.key -subj \
+"/C=FR/ST=Paris/L=Paris/O=NA/OU=NA/CN=abarot"
 
-# bash create_database.sh
+#download phpmyadmin to my_site 
+wget https://files.phpmyadmin.net/phpMyAdmin/4.9.4/phpMyAdmin-4.9.4-all-languages.tar.gz
+tar xf phpMyAdmin-4.9.4-all-languages.tar.gz 
+mv phpMyAdmin-4.9.4-all-languages phpmyadmin
+mv phpmyadmin var/www/my_site.com/.
 
-#wordpress file transfer to my_site
+#download wordpress to my_site
 wget https://wordpress.org/latest.tar.gz
 tar xf latest.tar.gz
-mv  /wordpress var/www/my_site.com/.
+chown -R www-data:www-data wordpress
+chmod 755 -R wordpress
+mv wordpress my_blog
+mv my_blog var/www/my_site.com/.
 
-#starting nginx service
+#creating database
+bash db_create.sh
+
+#starting nginx and php-fpm service
 service nginx start
+service php7.3-fpm start
 
 #cleaning root
 rm latest.tar.gz
-rm -rf wordpress
-rm create_database.sh
+rm phpMyAdmin-4.9.4-all-languages.tar.gz
+rm db_create.sh
 rm ft_server.sh
+
+bash
