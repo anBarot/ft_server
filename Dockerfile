@@ -5,8 +5,6 @@ EXPOSE 80
 EXPOSE 443
 
 RUN apt-get update
-RUN apt-get install -y apt-utils
-RUN apt-get install -y vim
 RUN apt-get install -y nginx
 RUN apt-get install -y openssl
 RUN apt-get install -y php7.3-fpm 
